@@ -48,6 +48,9 @@ class Discrete_Radon_Transform:
         # m_ij = |m_ij - 255|
         return np.ones(M.shape)*255 - M
 
+    def get_transform(self):
+        return self.Transformed
+
     def display_result(self, name="radon_result", dir="./"):
         fig = plt.figure()
         plt.title("$\\tilde F (p(k), t(h)) = \Delta x * \sum_{m=0}^{M-1}F(x(m), p(k)*x(m)+t(h))$")
