@@ -76,3 +76,26 @@ def get_transform_result(angle_degree, shift, image_shape, thickness=1):
     res_shift = t[offset_idx]
 
     return res_tg, res_shift
+
+
+def get_transform_result_api(angle_degrees, shifts, image_shape, thickness=1):
+    angle_tangent_acc = 500
+    shift_acc = 50
+    tg = np.tan(np.pi * 89 / 180)
+    p = np.linspace(-tg, tg, angle_tangent_acc)
+    t = np.linspace(-5, 5, shift_acc)
+
+    img_h = image_shape[0]
+    img_w = image_shape[1]
+    image = np.zeros((img_h, img_w, 3), dtype=np.uint8)
+    for angle_degree, shift in zip(angle_degrees, shifts):
+        image = make_line(angle_degree, shift, thickness, image)
+    im = Image.fromarray(image)
+    im.save("test_img.jpeg")
+
+    tf = Discrete_Radon_Transform("test_img.jpeg", angle_tangent_acc, shift_acc)
+    tf.display_result()
+    pathlib.Path.unlink("test_img.jpeg")
+
+    found_lines = tf.get_params()
+    return found_lines
